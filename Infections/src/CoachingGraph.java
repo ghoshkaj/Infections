@@ -11,16 +11,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-import Graph.edge;
-
 public class CoachingGraph {
 
 	//class variables
-	private final int MAXUSERSIZE = 100;
-	User[] userList = new User[MAXUSERSIZE];
-	
-	//hashmap
-//	public Map<String, Coaches> townsMap = new HashMap<String, edge>();
+	private final int maxUserListSize = 101;
+	private User[] userList = new User[maxUserListSize];
+	private int totalUsers;
 
 	
 	//edge
@@ -50,30 +46,81 @@ public class CoachingGraph {
 	
 	public CoachingGraph(String inputFilename) throws FileNotFoundException {
 		
-		readGraph(inputFilename); 
+		totalUsers = readGraph(inputFilename); 
 	}
 	
-	private void readGraph(String inputFilename) throws FileNotFoundException{
-		
-		userList = null;
-		
+	private int readGraph(String inputFilename) throws FileNotFoundException{
+			
 		Scanner input = new Scanner(new File(inputFilename));
 		int totalUsers, userID; // info for set up to read in graph
-		int userID1, userID2; // info for creating edges between users
+		int user1, user2; // info for creating edges between users		
 		
-		
-		totalUsers = input.nextInt();
+		totalUsers = input.nextInt() + 1;
 		
 		//initialize all users in user vertex
-		for(int i = 0; i < totalUsers; i++){
-			userList[i] = 
+		for(int i = 1; i < totalUsers; i++){
+			userList[i] = new User(input.nextInt(), null);
+		}
+		
+		//read in coaching relations
+		while(input.hasNext()){
+//			user1 = getInt(input);
+//			user2 = getInt(input);
+			user1 = input.nextInt();
+			user2 = input.nextInt();
+			
+			//add user1 to the front of user2's adjacency list
+			//add user2 to the front of user1's adjacency list
+			userList[user2].adjacencyList = new Coaches(user1,userList[user2].adjacencyList);
+			userList[user1].adjacencyList = new Coaches(user2,userList[user1].adjacencyList);
+		}
+		
+		input.close();
+		
+		return totalUsers;
+	}
+	
+//	private int getInt(Scanner input){
+//		while(!input.hasNextInt()){
+//			input.next();
+//		}
+//		return input.nextInt();
+//	}
+	
+	public void printGraph(){
+		
+		printGraph(userList, totalUsers);
+	}
+	
+	private void printGraph(User[] userList, int totalUsers){
+		
+		Coaches temp;
+
+		for(int i = 1; i < totalUsers; i++){
+			//print out user name and site version
+			System.out.print("User: " + userList[i].UserID);
+			System.out.println("\tSite Version: " + userList[i].UserID);
+			System.out.print("Coaches/coached by: " );
+			
+			//go into the linked list and print out members here
+			temp = userList[i].adjacencyList;
+			while(temp != null){
+				System.out.print(" " + temp.UserID);
+				temp = temp.next;
+			}
+			System.out.println();
+			System.out.println();
 		}
 		
 	}
 	
-	public static void main(String[] args) {
+//	private void 
 	
-		System.out.println("hello world");
+	public static void main(String[] args) throws FileNotFoundException {
+			
+		CoachingGraph newGraph = new CoachingGraph("/home/kg/git/Infections/src/input.txt");
+		
+		newGraph.printGraph();
 
 	}
 
