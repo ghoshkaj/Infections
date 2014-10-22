@@ -7,8 +7,7 @@
  *
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class CoachingGraph {
@@ -56,8 +55,9 @@ public class CoachingGraph {
 		int totalUsers, userID; // info for set up to read in graph
 		int user1, user2; // info for creating edges between users		
 		
-//		totalUsers = input.nextInt() + 1; // so that when using totalUsers as end point for iterating i, i matches with userList index
-		totalUsers = getInt(input) + 1;
+		totalUsers = getInt(input) + 1; 
+		// +1 so that when using totalUsers as end point 
+		//for iterating i, i matches with userList index
 		
 		//initialize all users in userList
 		for(int i = 1; i < totalUsers; i++){
@@ -218,11 +218,13 @@ public class CoachingGraph {
 	 *	   gives a rough approximation of the desired infected nodes
 	 *	
 	 *	 Here is the implementation of A. It is quite time consuming though:
+	 *   (The added bonus is that it gets towards achieving limited infection 
+	 *   on an exact number n)
 	 **************************************************************************/
 	
 	
 	
-	/* Initialize necessary data structures */
+	/* Initialize necessary class data structures */
 	
 	// if every vertex is disconnected, there will be at most the 
 	// maxUserListSize, again plus 1 to account for index i = 0
@@ -272,30 +274,69 @@ public class CoachingGraph {
 	}
 	
 	// 2) limitedInfection
-	public void limitedInfection(int n){
+	public void limitedInfection(int approximateN){
 		
+		//binary search on the vertex counts to find closest number to N
+		//run total infection on start graph node corresponding to that vertex count
 		
 	}
 	
 	
 	public static void main(String[] args) throws FileNotFoundException {
-			
+		
+		Scanner in = new Scanner(System.in);
+		String filename;
+		int userId, siteVersion;
+		
 		CoachingGraph newGraph = new CoachingGraph("/home/kg/git/Infections/src/input1.txt");
 	
+		System.out.println("The curent graph looks like this: ");
+		System.out.println("  7 -- 3 -- 5    8 -- 6");
+		System.out.println("  |    |         |    |");
+		System.out.println("  2    4   10 -- 9 -- 1");
+		System.out.println();
+		System.out.println("There are two components, each with 5 users. The numbers are User IDs.");
+		System.out.println("(The above visualization is hard-coded, not a method unfortunately)\n");
+		
 		System.out.println("Detailed Graph");
 		newGraph.printDetailedGraph();
 		
 		System.out.println("Site Versions");
 		newGraph.printSiteVersionGraph();
 		
-		newGraph.totalInfectionDFS(3,3);//parameters are (userID, newSiteVersion)
+		newGraph.totalInfectionDFS(3,4);//parameters are (userID, newSiteVersion)
 		
-		System.out.println("Site Versions after total infection:");
+		System.out.println("Site versions after total infection of site version 4, starting with User 3:\n");
 		newGraph.printSiteVersionGraph();
 
 		System.out.println("Running DFS to extract graph pre-processing information");
 		newGraph.DFS();
+		
+		System.out.println("\n***************************************************");
+		System.out.println("\nTry with your own graph! Please input the file path and name."
+				+ "Example: /home/kg/git/Infections/src/input1.txt");
+		
+		filename = in.next();
+		CoachingGraph yourGraph = new CoachingGraph(filename);
+	
+		System.out.println("Detailed Graph");
+		yourGraph.printDetailedGraph();
 
+		System.out.println("Site Versions");
+		yourGraph.printSiteVersionGraph();
+		
+		System.out.println("What new site version do you want to deploy?");
+		siteVersion = in.nextInt();
+		System.out.println("Which user do you want to start the infection with?");
+		userId = in.nextInt();
+		
+		yourGraph.totalInfectionDFS(userId, siteVersion);
+		
+		System.out.println("Site versions after total infection of site version 4, starting with User 3:\n");
+		yourGraph.printSiteVersionGraph();
+
+		System.out.println("Running DFS to extract graph pre-processing information");
+		yourGraph.DFS();
 	}
 
 }
