@@ -288,7 +288,7 @@ public class CoachingGraph {
 		String filename;
 		int userId, siteVersion;
 		
-		CoachingGraph newGraph = new CoachingGraph("/home/kg/git/Infections/src/input1.txt");
+		CoachingGraph newGraph = new CoachingGraph("/home/kg/git/Infections/src/input.txt");
 	
 		System.out.println("The curent graph looks like this: ");
 		System.out.println("  7 -- 3 -- 5    8 -- 6");
@@ -314,7 +314,7 @@ public class CoachingGraph {
 		
 		System.out.println("\n***************************************************");
 		System.out.println("\nTry with your own graph! Please input the file path and name."
-				+ "Example: /home/kg/git/Infections/src/input1.txt");
+				+ "Example: /home/kg/git/Infections/src/input1.txt :");
 		
 		filename = in.next();
 		CoachingGraph yourGraph = new CoachingGraph(filename);
